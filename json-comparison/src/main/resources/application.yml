@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: json-comparison
+  profiles:
+    active: @activeProfile@
