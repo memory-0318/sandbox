@@ -16,7 +16,7 @@ import javax.persistence.Table;
 @Builder(setterPrefix = "set", toBuilder = true)
 @Entity
 @Table(name = "USER_INFO")
-public class UserInfoNearEntity {
+public class UserInfoEntity {
 
     @Id
     @Column(name = "ACCOUNT")
@@ -34,6 +34,6 @@ public class UserInfoNearEntity {
     @Column(name = "TELH")
     private String telh;
 
-    @Column(name = "HISTORY_PASSWORD")
-    private String historyPassword;
+    @Column(name = "PHONE")
+    private String phone;
 }

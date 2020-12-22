@@ -1,8 +1,7 @@
-package tw.brian.jasypt.command.user_info;
+package tw.brian.jasypt.command.user_info_app;
 
 import tw.brian.jasypt.BaseCommand;
 import tw.brian.jasypt.CommandType;
-import tw.brian.jasypt.command.Command;
 import tw.brian.jasypt.entity.UserInfoAppEntity;
 import tw.brian.jasypt.manager.EncryptionManager;
 import tw.brian.jasypt.repository.UserInfoAppRepository;

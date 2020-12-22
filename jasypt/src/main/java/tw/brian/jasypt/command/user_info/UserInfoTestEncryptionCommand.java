@@ -1,10 +1,10 @@
-package tw.brian.jasypt.command.user_info_near;
+package tw.brian.jasypt.command.user_info;
 
 import lombok.extern.slf4j.Slf4j;
 import tw.brian.jasypt.BaseCommand;
 import tw.brian.jasypt.CommandType;
-import tw.brian.jasypt.entity.UserInfoNearEntity;
-import tw.brian.jasypt.entity.UserInfoNearRepository;
+import tw.brian.jasypt.entity.UserInfoEntity;
+import tw.brian.jasypt.repository.UserInfoRepository;
 import tw.brian.jasypt.manager.EncryptionManager;
 
 import java.util.List;
@@ -16,13 +16,13 @@ import java.util.stream.Collectors;
  * @date: 2020/12/11
  */
 @Slf4j
-public class UserInfoNearTestEncryptionCommand extends BaseCommand {
+public class UserInfoTestEncryptionCommand extends BaseCommand {
     private final EncryptionManager encryptionManager;
-    private final UserInfoNearRepository repository;
+    private final UserInfoRepository repository;
 
-    public UserInfoNearTestEncryptionCommand(
+    public UserInfoTestEncryptionCommand(
         EncryptionManager encryptionManager,
-        UserInfoNearRepository repository) {
+        UserInfoRepository repository) {
         super(CommandType.TEST_ENCRYPT_USER_INFO_NEAR.getCommandName());
         this.encryptionManager = encryptionManager;
         this.repository = repository;
@@ -30,24 +30,24 @@ public class UserInfoNearTestEncryptionCommand extends BaseCommand {
 
     @Override
     public void execute() {
-        List<UserInfoNearEntity> encryptedEntities = this.repository.findTop100By()
+        List<UserInfoEntity> encryptedEntities = this.repository.findTop100By()
             .parallelStream()
             .map(entity -> entity.toBuilder()
-                .setAccount(this.encryptionManager.encrypt(entity.getAccount()))
                 .setPasswd(this.encryptionManager.encryptPassword(entity.getPasswd()))
                 .setName(this.encryptionManager.encrypt(entity.getName()))
                 .setAddress(this.encryptionManager.encrypt(entity.getAddress()))
                 .setTelh(this.encryptionManager.encrypt(entity.getTelh()))
-                .setHistoryPassword(this.encryptionManager.encrypt(entity.getHistoryPassword()))
+                .setPhone(this.encryptionManager.encrypt(entity.getPhone()))
                 .build())
             .collect(Collectors.toList());
 
         encryptedEntities.forEach(entity -> log
-            .info("ACCOUNT: {} -> {}, NAME: {} -> {}, ADDRESS: {} -> {}, TELH: {} -> {}",
-                entity.getAccount(), this.encryptionManager.decrypt(entity.getAccount()),
+            .info("ACCOUNT: {}, NAME: {} -> {}, ADDRESS: {} -> {}, TELH: {} -> {}, PHONE: {} -> {}",
+                entity.getAccount(),
                 entity.getName(), this.encryptionManager.decrypt(entity.getName()),
                 entity.getAddress(), this.encryptionManager.decrypt(entity.getAddress()),
-                entity.getTelh(), this.encryptionManager.decrypt(entity.getTelh())
+                entity.getTelh(), this.encryptionManager.decrypt(entity.getTelh()),
+                entity.getPhone(), this.encryptionManager.decrypt(entity.getPhone())
             ));
     }
 }

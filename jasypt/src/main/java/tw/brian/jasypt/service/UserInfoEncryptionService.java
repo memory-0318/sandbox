@@ -19,21 +19,21 @@ import tw.brian.jasypt.command.CommandInvoker;
 @ShellComponent
 @RequiredArgsConstructor
 @Slf4j
-public class UserInfoNearEncryptionService {
+public class UserInfoEncryptionService {
     private final CommandInvoker commandInvoker;
     private final CommandFactory commandFactory;
 
-    @ShellMethod(key = { "encrypt-user-info-near" }, value = "加密UserInfoNear資料")
+    @ShellMethod(key = { "encrypt-user-info" }, value = "加密UserInfoNear資料")
     public void encryptUserInfoNear() {
         this.commandInvoker.execute(this.commandFactory.createUserInfoNearEncryptionCommand());
     }
 
-    @ShellMethod(key = { "decrypt-user-info-near" }, value = "解密UserInfoNear資料")
+    @ShellMethod(key = { "decrypt-user-info" }, value = "解密UserInfoNear資料")
     public void decryptUserInfoNear() {
         this.commandInvoker.execute(this.commandFactory.createUserInfoNearDecryptionCommand());
     }
 
-    @ShellMethod(key = { "test-user-info-near" }, value = "測試加密UserInfoNear資料")
+    @ShellMethod(key = { "test-user-info" }, value = "測試加密UserInfoNear資料")
     public void testEncryptUserInfoNear() {
         this.commandInvoker.execute(this.commandFactory.createUserInfoNearTestEncryptionCommand());
     }

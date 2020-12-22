@@ -6,13 +6,13 @@ import tw.brian.jasypt.BaseCommand;
 import tw.brian.jasypt.command.isd_user.IsdUserDecryptionCommand;
 import tw.brian.jasypt.command.isd_user.IsdUserEncryptionCommand;
 import tw.brian.jasypt.command.isd_user.IsdUserTestEncryptionCommand;
-import tw.brian.jasypt.command.user_info.UserInfoAppDecryptionCommand;
-import tw.brian.jasypt.command.user_info.UserInfoAppEncryptionCommand;
-import tw.brian.jasypt.command.user_info.UserInfoAppTestEncryptionCommand;
-import tw.brian.jasypt.command.user_info_near.UserInfoNearDecryptionCommand;
-import tw.brian.jasypt.command.user_info_near.UserInfoNearEncryptionCommand;
-import tw.brian.jasypt.command.user_info_near.UserInfoNearTestEncryptionCommand;
-import tw.brian.jasypt.entity.UserInfoNearRepository;
+import tw.brian.jasypt.command.user_info_app.UserInfoAppDecryptionCommand;
+import tw.brian.jasypt.command.user_info_app.UserInfoAppEncryptionCommand;
+import tw.brian.jasypt.command.user_info_app.UserInfoAppTestEncryptionCommand;
+import tw.brian.jasypt.command.user_info.UserInfoDecryptionCommand;
+import tw.brian.jasypt.command.user_info.UserInfoEncryptionCommand;
+import tw.brian.jasypt.command.user_info.UserInfoTestEncryptionCommand;
+import tw.brian.jasypt.repository.UserInfoRepository;
 import tw.brian.jasypt.manager.EncryptionManager;
 import tw.brian.jasypt.repository.ISDUserRepository;
 import tw.brian.jasypt.repository.UserInfoAppRepository;
@@ -28,7 +28,7 @@ public class CommandFactory {
     private final EncryptionManager encryptionManager;
     private final ISDUserRepository isdUserRepository;
     private final UserInfoAppRepository userInfoAppRepository;
-    private final UserInfoNearRepository userInfoNearRepository;
+    private final UserInfoRepository userInfoRepository;
 
     public BaseCommand createIsdUserEncryptionCommand() {
         return new IsdUserEncryptionCommand(this.encryptionManager, this.isdUserRepository);
@@ -43,15 +43,15 @@ public class CommandFactory {
     }
 
     public BaseCommand createUserInfoNearEncryptionCommand() {
-        return new UserInfoNearEncryptionCommand(this.encryptionManager, this.userInfoNearRepository);
+        return new UserInfoEncryptionCommand(this.encryptionManager, this.userInfoRepository);
     }
 
     public BaseCommand createUserInfoNearDecryptionCommand() {
-        return new UserInfoNearDecryptionCommand(this.encryptionManager, this.userInfoNearRepository);
+        return new UserInfoDecryptionCommand(this.encryptionManager, this.userInfoRepository);
     }
 
     public BaseCommand createUserInfoNearTestEncryptionCommand() {
-        return new UserInfoNearTestEncryptionCommand(this.encryptionManager, this.userInfoNearRepository);
+        return new UserInfoTestEncryptionCommand(this.encryptionManager, this.userInfoRepository);
     }
 
     public BaseCommand createUserInfoAppEncryptionCommand() {

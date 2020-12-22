@@ -1,4 +1,4 @@
-package tw.brian.jasypt.command.user_info;
+package tw.brian.jasypt.command.user_info_app;
 
 import lombok.extern.slf4j.Slf4j;
 import tw.brian.jasypt.BaseCommand;
