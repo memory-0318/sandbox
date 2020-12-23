@@ -3,19 +3,23 @@ package tw.brian.jasypt.command;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import tw.brian.jasypt.BaseCommand;
+import tw.brian.jasypt.command.ie_organ_personnel.IEOrganPersonnelDecryptionCommand;
+import tw.brian.jasypt.command.ie_organ_personnel.IEOrganPersonnelEncryptionCommand;
+import tw.brian.jasypt.command.ie_organ_personnel.IEOrganPersonnelTestEncryptionCommand;
 import tw.brian.jasypt.command.isd_user.IsdUserDecryptionCommand;
 import tw.brian.jasypt.command.isd_user.IsdUserEncryptionCommand;
 import tw.brian.jasypt.command.isd_user.IsdUserTestEncryptionCommand;
-import tw.brian.jasypt.command.user_info_app.UserInfoAppDecryptionCommand;
-import tw.brian.jasypt.command.user_info_app.UserInfoAppEncryptionCommand;
-import tw.brian.jasypt.command.user_info_app.UserInfoAppTestEncryptionCommand;
 import tw.brian.jasypt.command.user_info.UserInfoDecryptionCommand;
 import tw.brian.jasypt.command.user_info.UserInfoEncryptionCommand;
 import tw.brian.jasypt.command.user_info.UserInfoTestEncryptionCommand;
-import tw.brian.jasypt.repository.UserInfoRepository;
+import tw.brian.jasypt.command.user_info_app.UserInfoAppDecryptionCommand;
+import tw.brian.jasypt.command.user_info_app.UserInfoAppEncryptionCommand;
+import tw.brian.jasypt.command.user_info_app.UserInfoAppTestEncryptionCommand;
 import tw.brian.jasypt.manager.EncryptionManager;
+import tw.brian.jasypt.repository.IEOrganPersonnelRepository;
 import tw.brian.jasypt.repository.ISDUserRepository;
 import tw.brian.jasypt.repository.UserInfoAppRepository;
+import tw.brian.jasypt.repository.UserInfoRepository;
 
 /**
  * @author Brian Su <brian.su@tpisoftware.com>
@@ -29,6 +33,19 @@ public class CommandFactory {
     private final ISDUserRepository isdUserRepository;
     private final UserInfoAppRepository userInfoAppRepository;
     private final UserInfoRepository userInfoRepository;
+    private final IEOrganPersonnelRepository ieOrganPersonnelRepository;
+
+    public BaseCommand createIEOrganEncryptionCommand() {
+        return new IEOrganPersonnelEncryptionCommand(this.encryptionManager, this.ieOrganPersonnelRepository);
+    }
+
+    public BaseCommand createIEOrganDecryptionCommand() {
+        return new IEOrganPersonnelDecryptionCommand(this.encryptionManager, this.ieOrganPersonnelRepository);
+    }
+
+    public BaseCommand createIEOrganTestEncryptionCommand() {
+        return new IEOrganPersonnelTestEncryptionCommand(this.encryptionManager, this.ieOrganPersonnelRepository);
+    }
 
     public BaseCommand createIsdUserEncryptionCommand() {
         return new IsdUserEncryptionCommand(this.encryptionManager, this.isdUserRepository);

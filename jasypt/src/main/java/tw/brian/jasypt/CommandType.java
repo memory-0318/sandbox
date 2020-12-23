@@ -6,6 +6,10 @@ package tw.brian.jasypt;
  * @date: 2020/12/11
  */
 public enum CommandType {
+    ENCRYPT_IE_ORGAN_PERSONNEL("encrypt-ie-organ-personnel"),
+    DECRYPT_IE_ORGAN_PERSONNEL("decrypt-ie-organ-personnel"),
+    TEST_ENCRYPT_ORGAN_PERSONNEL("test-encrypt-ie-organ-personnel"),
+
     ENCRYPT_ISD_USER("encrypt-isd-user"),
     DECRYPT_ISD_USER("decrypt-isd-user"),
     TEST_ENCRYPT_ISD_USER("test-encrypt-isd-user"),
