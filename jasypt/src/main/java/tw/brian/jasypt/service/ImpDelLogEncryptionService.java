@@ -15,6 +15,7 @@ import tw.brian.jasypt.entity.IImpDelLogEntity;
 import tw.brian.jasypt.manager.EncryptionManager;
 import tw.brian.jasypt.repository.ImpDelLogRepository;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -101,14 +102,17 @@ public class ImpDelLogEncryptionService {
         List<IImpDelLogEntity> impDelLogEntities = this.impDelLogRepository.findTop100By()
             .parallelStream()
             .map(entity -> entity.toBuilder()
-                .setEncodePassOpName(this.encryptionManager.encrypt(entity.getEncodePassOpName()))
+                .setEncodePassOpName(this.encryptionManager
+                    .encrypt(new String(entity.getEncodePassOpName(), StandardCharsets.UTF_16LE))
+                    .getBytes(StandardCharsets.UTF_8))
                 .build())
             .collect(Collectors.toList());
 
         impDelLogEntities.forEach(entity -> log
             .info("oid: {}, encode_pass_op_name: {} -> {}",
                 entity.getImpDelOid(),
-                new String(entity.getEncodePassOpName()), new String(this.encryptionManager.decrypt(entity.getEncodePassOpName()))
+                new String(entity.getEncodePassOpName()),
+                new String(this.encryptionManager.decrypt(entity.getEncodePassOpName()))
             ));
     }
 
@@ -119,7 +123,9 @@ public class ImpDelLogEncryptionService {
         return impDelLogEntityPage.getContent()
             .stream()
             .map(entity -> entity.toBuilder()
-                .setEncodePassOpName(this.encryptionManager.encrypt(entity.getEncodePassOpName()))
+                .setEncodePassOpName(this.encryptionManager
+                    .encrypt(new String(entity.getEncodePassOpName(), StandardCharsets.UTF_16LE))
+                    .getBytes(StandardCharsets.UTF_8))
                 .build())
             .collect(Collectors.toList());
     }

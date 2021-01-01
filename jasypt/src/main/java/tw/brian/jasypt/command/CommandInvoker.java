@@ -7,6 +7,7 @@ import tw.brian.jasypt.BaseCommand;
 import tw.brian.jasypt.command.listener.CommandListener;
 
 import javax.validation.constraints.NotNull;
+import java.io.IOException;
 import java.util.Objects;
 
 /**
@@ -29,7 +30,11 @@ public class CommandInvoker {
         stopWatch.start();
 
         this.beforeExecute(command, commandListener);
-        command.execute();
+        try {
+            command.execute();
+        } catch (IOException e) {
+            log.error("Exception occurred when executing command");
+        }
         this.afterExecute(command, commandListener);
 
         stopWatch.stop();

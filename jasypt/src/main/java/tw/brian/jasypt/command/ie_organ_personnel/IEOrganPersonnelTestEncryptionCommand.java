@@ -7,6 +7,8 @@ import tw.brian.jasypt.entity.IEOrganPersonnelEntity;
 import tw.brian.jasypt.manager.EncryptionManager;
 import tw.brian.jasypt.repository.IEOrganPersonnelRepository;
 
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,17 +36,19 @@ public class IEOrganPersonnelTestEncryptionCommand extends BaseCommand {
         List<IEOrganPersonnelEntity> encryptedEntities = this.repository.findTop100By()
             .parallelStream()
             .map(entity -> entity.toBuilder()
-                .setEncodePersonnelNm(this.encryptionManager.encrypt(entity.getEncodePersonnelNm()))
-                .setEncodeTelNumber(this.encryptionManager.encrypt(entity.getEncodeTelNumber()))
+                .setEncodePersonnelNm(this.encryptionManager
+                    .encrypt(new String(entity.getEncodePersonnelNm(), StandardCharsets.UTF_16LE))
+                    .getBytes(StandardCharsets.UTF_8))
+                .setEncodeTelNumber(this.encryptionManager
+                    .encrypt(new String(entity.getEncodeTelNumber(), StandardCharsets.UTF_16LE))
+                    .getBytes(StandardCharsets.UTF_8))
                 .build())
             .collect(Collectors.toList());
 
         encryptedEntities.forEach(entity -> log
-            .info("PID: {}, ENCODE_PERSONNEL_NM: {} -> {}, ENCODE_PERSONNEL_TEL: {} -> {}",
+            .info("PID: {}, Name: {} -> {}, Tel: {} -> {}",
                 entity.getPid(),
-                new String(entity.getEncodePersonnelNm()),
-                new String(this.encryptionManager.decrypt(entity.getEncodePersonnelNm())),
-                new String(entity.getEncodeTelNumber()),
-                new String(this.encryptionManager.decrypt(entity.getEncodeTelNumber()))));
+                new String(entity.getEncodePersonnelNm()), new String(this.encryptionManager.decrypt(entity.getEncodePersonnelNm())),
+                new String(entity.getEncodeTelNumber()), new String(this.encryptionManager.decrypt(entity.getEncodeTelNumber()))));
     }
 }

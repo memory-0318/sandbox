@@ -9,7 +9,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "IEORGANPERSONNEL")
+@Table(name = "IEORGANPERSONNEL_TEST")
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
