@@ -10,10 +10,10 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>json-comparison</artifactId>
+    <artifactId>spring-validation-example</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>json-comparison</name>
-    <description>Demo JSON comparison</description>
+    <name>spring-validation-example</name>
+    <description>Spring validation example project</description>
 
     <properties>
         <java.version>14</java.version>
@@ -66,6 +66,11 @@
                     <artifactId>junit-vintage-engine</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>6.0.1.Final</version>
         </dependency>
 
         <dependency>
