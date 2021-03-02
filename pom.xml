@@ -154,7 +154,7 @@
         <module>spring-validation-example</module>
         <module>kafka-demo</module>
         <module>jasypt</module>
-        <module>01_JUnitDemo</module>
+        <module>0001_JUnitDemo</module>
         <module>9001_HuntTheWumpus</module>
     </modules>
 </project>
