@@ -7,6 +7,9 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 import org.mapstruct.factory.Mappers;
 
+import java.util.List;
+import java.util.Set;
+
 /**
  * @author Brian Su <brian.su@tpisoftware.com>
  * @description:
@@ -31,4 +34,8 @@ public interface CountryMapper {
         @Mapping(target = "geoPosition", source = "vo.position")
     })
     CountryDTO toDTO(CountryVO vo);
+
+    List<CountryDTO> toDTOList(List<CountryVO> voList);
+
+    Set<CountryDTO> toDTOSet(Set<CountryVO> voSet);
 }
