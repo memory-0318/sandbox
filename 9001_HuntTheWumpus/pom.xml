@@ -10,7 +10,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>02_HuntTheWumpus</artifactId>
+    <artifactId>9001_HuntTheWumpus</artifactId>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
