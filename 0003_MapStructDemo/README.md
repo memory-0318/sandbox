@@ -66,6 +66,7 @@ MapStruct可以有效處理物件間轉換的屬性設定，避免重複撰寫se
 ## MapStruct基本使用說明
 
 這邊以DTO與VO物件互相轉換為例，準備DTO以及VO
+
 *PersonDTO*
 
 ```java
@@ -99,7 +100,7 @@ public class PersonVO {
 接著撰寫物件轉換Mapper
 
 ```java
-
+// omit import
 @Mapper
 public interface PersonMapper {
     PersonMapper INSTANCE = Mappers.getMapper(PersonMapper.class);
@@ -110,9 +111,9 @@ public interface PersonMapper {
 }
 ```
 
-因為有引入org.mapstruct.mapstruct-processor，所以會自動生成轉換程式碼。
+因為有引入`org.mapstruct.mapstruct-processor`，所以會自動生成轉換程式碼。
 
-接著即可直接透過PersonMapper.INSTANCE將DTO與VO互相轉換。
+接著即可直接透過`PersonMapper.INSTANCE`將DTO與VO互相轉換。
 
 ## MapStruct進階使用說明
 
@@ -148,6 +149,8 @@ public class CountryVO {
 ```
 
 接著撰寫物件轉換Mapper
+
+*CountryMapper*
 
 ```java
 
