@@ -10,16 +10,17 @@ import com.demo.game.map.cave.Cave;
  * @date: 2021/2/26
  */
 public class AdventurerNormalMoveCommand extends BaseCreatureMoveCommand {
-
-    public AdventurerNormalMoveCommand(
-        Creature creature,
-        Cave destinationCave,
-        GameMap gameMap, CreatureMoveResult creatureMoveResult) {
-        super(creature, destinationCave, gameMap, creatureMoveResult);
+    public AdventurerNormalMoveCommand(Creature creature, Cave destinationCave, GameMap gameMap) {
+        super(creature, destinationCave, gameMap);
     }
 
     @Override
-    public void execute() {
-
+    public CommandResult<Creature> execute() {
+        if (this.gameMap.isNeighborCave(this.creature.getCurrentCave(), this.destinationCave)) {
+            throw new IllegalMovementException("冒險者只能在鄰近洞窟移動");
+        }
+        return new CommandResult<>(this.creature.toBuilder()
+            .setCurrentCave(this.destinationCave)
+            .build());
     }
 }

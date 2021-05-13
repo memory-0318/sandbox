@@ -5,10 +5,7 @@ import com.demo.game.map.cave.CaveConnection;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -17,7 +14,7 @@ import java.util.stream.Collectors;
  * @date: 2021/2/26
  */
 public class GameMapImpl implements GameMap {
-    private Multimap<Cave, CaveConnection> caveToCaveConnectionsMap = LinkedHashMultimap.create();
+    private final Multimap<Cave, CaveConnection> caveToCaveConnectionsMap = LinkedHashMultimap.create();
 
     public GameMapImpl(Set<CaveConnection> caveConnections) {
         this.setupGameMap(caveConnections);
@@ -38,7 +35,14 @@ public class GameMapImpl implements GameMap {
     }
 
     @Override
+    public Set<Cave> listAllCaves() {
+        return new HashSet<>(this.caveToCaveConnectionsMap.keySet());
+    }
+
+    @Override
     public boolean isNeighborCave(Cave cave1, Cave cave2) {
+        this.checkNeighborCaves(cave1, cave2);
+
         CaveConnection queryCaveConnection1 = CaveConnection.builder()
             .setFrom(cave1)
             .setTo(cave2)
@@ -52,6 +56,12 @@ public class GameMapImpl implements GameMap {
         return caveConnections.stream()
             .anyMatch(caveConnection -> Objects.equals(caveConnection, queryCaveConnection1)
                 || Objects.equals(caveConnection, queryCaveConnection2));
+    }
+
+    protected void checkNeighborCaves(Cave cave1, Cave cave2) {
+        if (cave1 == null || cave2 == null) {
+            throw new IllegalArgumentException("鄰近洞窟測試的輸入值不可為null");
+        }
     }
 
     protected void setupGameMap(Set<CaveConnection> caveConnections) {

@@ -10,20 +10,17 @@ import com.demo.game.map.cave.Cave;
  * @date: 2021/2/26
  */
 public class WumpusMoveCommand extends BaseCreatureMoveCommand {
-
-    public WumpusMoveCommand(
-        Creature creature,
-        Cave destinationCave,
-        GameMap gameMap, CreatureMoveResult creatureMoveResult) {
-        super(creature, destinationCave, gameMap, creatureMoveResult);
+    public WumpusMoveCommand(Creature creature, Cave destinationCave, GameMap gameMap) {
+        super(creature, destinationCave, gameMap);
     }
 
     @Override
-    public void execute() {
+    public CommandResult<Creature> execute() {
         if (this.gameMap.isNeighborCave(this.creature.getCurrentCave(), this.destinationCave)) {
-            throw new IllegalMovementException("Wumpus只能移動到鄰近房間");
+            throw new IllegalMovementException("Wumpus只能移動到鄰近洞窟");
         }
-        this.creatureMoveResult = new CreatureMoveResult(this.creature.toBuilder()
+
+        return new CommandResult<>(this.creature.toBuilder()
             .setCurrentCave(this.destinationCave)
             .build());
     }

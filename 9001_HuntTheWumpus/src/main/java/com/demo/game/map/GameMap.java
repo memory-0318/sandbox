@@ -12,5 +12,7 @@ import java.util.Set;
 public interface GameMap {
     Set<Cave> listAllNeighborCaves(Cave cave);
 
+    Set<Cave> listAllCaves();
+
     boolean isNeighborCave(Cave cave1, Cave cave2);
 }
