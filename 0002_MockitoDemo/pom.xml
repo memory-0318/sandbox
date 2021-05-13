@@ -17,8 +17,8 @@
         <junit.version>5.7.0</junit.version>
         <mockito.version>3.7.0</mockito.version>
         <lombok.version>1.18.12</lombok.version>
+        <apache.commons.lang3>3.12.0</apache.commons.lang3>
     </properties>
-
 
     <repositories>
         <repository>
@@ -35,6 +35,13 @@
             <version>${junit.version}</version>
             <type>pom</type>
             <scope>import</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
@@ -57,6 +64,12 @@
             <version>${lombok.version}</version>
             <scope>provided</scope>
             <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${apache.commons.lang3}</version>
         </dependency>
     </dependencies>
 </project>
