@@ -115,6 +115,8 @@ public interface PersonMapper {
 
 接著即可直接透過`PersonMapper.INSTANCE`將DTO與VO互相轉換。
 
+詳細使用方式請參考`PersonMapperTest.java`。
+
 ## MapStruct指定欄位轉換
 
 這邊說明物件欄位轉換時，如何使用`@Mapping`指定兩物件間的欄位對應。
@@ -179,6 +181,8 @@ public interface CountryMapper {
 使用`@Mapping(source=<source field name>, target=<target field name>)`指定兩物件的欄位轉換，其中source欄位表示來源物件的欄位名稱，
 target欄位則表示目標物件的欄位名稱。若一次要轉換多個欄位，則使用`@Mappings({...})`將多個@Mapping設定包裝起來。
 
+詳細使用方式請參考`CountryMapperTest.java`。
+
 ## Collection類型轉換
 
 MapStruct可以處理轉換`List`或`Set`等`Collection`型別的轉換，擴充`CountryMapper`，增加`toDTOList()`與`toDTOSet()`兩方法:
@@ -218,7 +222,9 @@ public interface CountryMapper {
 > `CountryMapper.toDTO(...)`後，`CountryMapper.INSTANCE.toDTOList(...)`與`CountryMapper.INSTANCE.toDTOSet(...)`雖然不會編譯
 > 錯誤，但檢查轉換後的物件內容發現都是`null`。
 
-## 多來源物件轉換
+詳細使用方式請參考`CountryMapperTest.java`。
+
+## 多來源物件聚合
 
 MapStruct可以將多個來源物件聚合成一個物件，這邊範例將`PersonVO`以及`CountryVO`聚合成`CompositeDTO`。
 
@@ -257,6 +263,7 @@ public interface CompositeMapper {
 ```
 
 使用方式與前述範例相同。
+
 *CompositeMapperTest*
 
 ```java
