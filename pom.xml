@@ -182,5 +182,6 @@
         <module>9001_HuntTheWumpus</module>
         <module>0002_MockitoDemo</module>
         <module>0003_MapStructDemo</module>
+        <module>0004_Proj4jDemo</module>
     </modules>
 </project>
