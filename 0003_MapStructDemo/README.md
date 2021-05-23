@@ -1,6 +1,10 @@
 # MapStruct
 
-MapStruct可以有效處理物件間轉換的屬性設定，避免重複撰寫setter方法設值
+在系統開發過程中，難免會遇到各類物件的轉換，如DB Entity物件轉換成領域物件 (Domain Object)或值物件 (Value Object)、領域物件、值物件轉換成
+DTO物件，在物件的轉換過程中常伴隨著反覆的物件創建與設值，如果物件的欄位較多，就容易出現有些欄位設定遺漏，此時若沒有透過單元測試等手段驗證，就容易 造成在系統內部物件轉換或與外部系統溝通的傳遞過程中遺失資訊。
+
+MapStruct可以處理上述提到的問題，簡化物件間轉換欄位映射 (mapping)過程。MapStruct採用annotation processor技術，在Java編譯時期自動生成對應
+的Setter、Getter與Constructor等相關程式碼。
 
 ## Maven設定
 
@@ -11,6 +15,8 @@ MapStruct可以有效處理物件間轉換的屬性設定，避免重複撰寫se
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <!-- Note: 僅保留與MapStruct有關的設定 -->
     <properties>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
         <mapstruct.version>1.4.2.Final</mapstruct.version>
         <lombok.version>1.18.12</lombok.version>
     </properties>
@@ -41,8 +47,8 @@ MapStruct可以有效處理物件間轉換的屬性設定，避免重複撰寫se
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
                 <configuration>
-                    <source>1.8</source> <!-- depending on your project -->
-                    <target>1.8</target> <!-- depending on your project -->
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
                     <annotationProcessorPaths>
                         <path>
                             <groupId>org.mapstruct</groupId>
@@ -65,10 +71,9 @@ MapStruct可以有效處理物件間轉換的屬性設定，避免重複撰寫se
 
 ## MapStruct基本使用
 
-這邊以DTO與VO物件互相轉換為例，準備DTO以及VO
+這邊以DTO與VO物件互相轉換為例，準備DTO以及VO:
 
-*PersonDTO*
-
+*PersonDTO.java*
 ```java
 // omit import
 @Data
@@ -82,8 +87,7 @@ public class PersonDTO {
 }
 ```
 
-*PersonVO*
-
+*PersonVO.java*
 ```java
 // omit import
 @Data
@@ -97,8 +101,9 @@ public class PersonVO {
 }
 ```
 
-接著撰寫物件轉換Mapper
+接著撰寫物件轉換Mapper:
 
+*PersonMapper.java*
 ```java
 // omit import
 @Mapper
@@ -113,15 +118,51 @@ public interface PersonMapper {
 
 因為有引入`org.mapstruct.mapstruct-processor`，所以會自動生成轉換程式碼。
 
-接著即可直接透過`PersonMapper.INSTANCE`將DTO與VO互相轉換。
+接著即可直接透過`PersonMapper.INSTANCE`將DTO與VO互相轉換:
 
-詳細使用方式請參考`PersonMapperTest.java`。
+`PersonMapperTest.java`
+
+```java
+class PersonMapperTest {
+
+    @Test
+    void testToDTO() {
+        PersonVO personVO = PersonVO.builder()
+            .setFirstName("Brian")
+            .setLastName("Su")
+            .setAge(30)
+            .setGender(Gender.Male)
+            .build();
+        PersonDTO personDTO = PersonMapper.INSTANCE.toDTO(personVO);
+
+        assertThat(personDTO)
+            .extracting(PersonDTO::getFirstName, PersonDTO::getLastName, PersonDTO::getAge, PersonDTO::getGender)
+            .containsExactly(personVO.getFirstName(), personVO.getLastName(), personVO.getAge(), personVO.getGender());
+    }
+
+    @Test
+    void testToVO() {
+        PersonDTO personDTO = PersonDTO.builder()
+            .setFirstName("Brian")
+            .setLastName("Su")
+            .setAge(30)
+            .setGender(Gender.Male)
+            .build();
+        PersonVO personVO = PersonMapper.INSTANCE.toVO(personDTO);
+
+        assertThat(personVO)
+            .extracting(PersonVO::getFirstName, PersonVO::getLastName, PersonVO::getAge, PersonVO::getGender)
+            .containsExactly(personDTO.getFirstName(), personDTO.getLastName(), personDTO.getAge(),
+                personDTO.getGender());
+    }
+}
+```
 
 ## MapStruct指定欄位轉換
 
 這邊說明物件欄位轉換時，如何使用`@Mapping`指定兩物件間的欄位對應。
-*CountryDTO*
 
+*CountryDTO.java*
 ```java
 // omit import
 @Data
@@ -135,8 +176,7 @@ public class CountryDTO {
 }
 ```
 
-*CountryVO*
-
+*CountryVO.java*
 ```java
 // omit import
 @Data
@@ -150,12 +190,10 @@ public class CountryVO {
 }
 ```
 
-接著撰寫物件轉換Mapper
+接著撰寫物件轉換Mapper:
 
-*CountryMapper*
-
+*CountryMapper.java*
 ```java
-
 @Mapper
 public interface CountryMapper {
     CountryMapper INSTANCE = Mappers.getMapper(CountryMapper.class);
@@ -179,16 +217,77 @@ public interface CountryMapper {
 ```
 
 使用`@Mapping(source=<source field name>, target=<target field name>)`指定兩物件的欄位轉換，其中source欄位表示來源物件的欄位名稱，
-target欄位則表示目標物件的欄位名稱。若一次要轉換多個欄位，則使用`@Mappings({...})`將多個@Mapping設定包裝起來。
+target欄位則表示目標物件的欄位名稱。若一次要轉換多個欄位，可以使用`@Mappings({...})`將多個@Mapping設定包裝起來。
 
-詳細使用方式請參考`CountryMapperTest.java`。
+轉換範例:
+
+`CountryMapperTest.java`
+
+```java
+class CountryMapperTest {
+
+    @ParameterizedTest
+    @MethodSource("provideVOArguments")
+    void testToDTO(CountryVO countryVO) {
+        CountryDTO countryDTO = CountryMapper.INSTANCE.toDTO(countryVO);
+
+        assertThat(countryDTO)
+            .extracting(CountryDTO::getCountryCode, CountryDTO::getCountryName, CountryDTO::getCountryArea,
+                CountryDTO::getGeoPosition)
+            .containsExactly(countryVO.getCode(), countryVO.getName(), countryVO.getArea(), countryVO.getPosition());
+    }
+
+    @Test
+    void testToVO() {
+        CountryDTO countryDTO = CountryDTO.builder()
+            .setCountryCode("TW")
+            .setCountryName("Taiwan")
+            .setCountryArea(CountryArea.builder()
+                .setArea(123.0)
+                .setUnit("km2")
+                .build())
+            .setGeoPosition(GeoPosition.builder()
+                .setLongitude(121.597366d)
+                .setLatitude(25.105497d)
+                .build())
+            .build();
+
+        CountryVO countryVO = CountryMapper.INSTANCE.toVO(countryDTO);
+
+        assertThat(countryVO)
+            .extracting(CountryVO::getCode, CountryVO::getName, CountryVO::getArea,
+                CountryVO::getPosition)
+            .containsExactly(countryDTO.getCountryCode(), countryDTO.getCountryName(), countryDTO.getCountryArea(),
+                countryDTO.getGeoPosition());
+    }
+
+    private static Stream<Arguments> provideVOArguments() {
+        return Stream.of(
+            Arguments.of(
+                CountryVO.builder()
+                    .setCode("TW")
+                    .setName("Taiwan")
+                    .setArea(CountryArea.builder()
+                        .setArea(123.0)
+                        .setUnit("km2")
+                        .build())
+                    .setPosition(GeoPosition.builder()
+                        .setLongitude(121.597366d)
+                        .setLatitude(25.105497d)
+                        .build())
+                    .build()
+            )
+        );
+    }
+}
+```
 
 ## Collection類型轉換
 
 MapStruct可以處理轉換`List`或`Set`等`Collection`型別的轉換，擴充`CountryMapper`，增加`toDTOList()`與`toDTOSet()`兩方法:
 
+*CountryMapper.java*
 ```java
-
 @Mapper
 public interface CountryMapper {
     CountryMapper INSTANCE = Mappers.getMapper(CountryMapper.class);
@@ -218,18 +317,60 @@ public interface CountryMapper {
 
 接著即可透過`CountryMapper.INSTANCE.toDTOList(...)`與`CountryMapper.INSTANCE.toDTOSet(...)`轉換物件。
 
-> 目前不確定MapStruct在轉換Collection型別時如何找到單一物件的轉換方法 (如自動找到`CountryMapper.toDTO(...)`)，當移除
-> `CountryMapper.toDTO(...)`後，`CountryMapper.INSTANCE.toDTOList(...)`與`CountryMapper.INSTANCE.toDTOSet(...)`雖然不會編譯
-> 錯誤，但檢查轉換後的物件內容發現都是`null`。
+`CountryMapperTest.java`:
 
-詳細使用方式請參考`CountryMapperTest.java`。
+```java
+class CountryMapperTest {
+    @ParameterizedTest
+    @MethodSource("provideVOArguments")
+    void toDTOList(CountryVO countryVO) {
+        List<CountryDTO> countryDTOs = CountryMapper.INSTANCE.toDTOList(Collections.singletonList(countryVO));
+
+        assertThat(countryDTOs)
+            .hasSize(1)
+            .extracting(CountryDTO::getCountryCode, CountryDTO::getCountryName, CountryDTO::getCountryArea,
+                CountryDTO::getGeoPosition)
+            .contains(tuple(countryVO.getCode(), countryVO.getName(), countryVO.getArea(), countryVO.getPosition()));
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideVOArguments")
+    void toDTOSet(CountryVO countryVO) {
+        Set<CountryDTO> countryDTOs = CountryMapper.INSTANCE.toDTOSet(Collections.singleton(countryVO));
+
+        assertThat(countryDTOs)
+            .hasSize(1)
+            .extracting(CountryDTO::getCountryCode, CountryDTO::getCountryName, CountryDTO::getCountryArea,
+                CountryDTO::getGeoPosition)
+            .contains(tuple(countryVO.getCode(), countryVO.getName(), countryVO.getArea(), countryVO.getPosition()));
+    }
+
+    private static Stream<Arguments> provideVOArguments() {
+        return Stream.of(
+            Arguments.of(
+                CountryVO.builder()
+                    .setCode("TW")
+                    .setName("Taiwan")
+                    .setArea(CountryArea.builder()
+                        .setArea(123.0)
+                        .setUnit("km2")
+                        .build())
+                    .setPosition(GeoPosition.builder()
+                        .setLongitude(121.597366d)
+                        .setLatitude(25.105497d)
+                        .build())
+                    .build()
+            )
+        );
+    }
+}
+```
 
 ## 多來源物件聚合
 
 MapStruct可以將多個來源物件聚合成一個物件，這邊範例將`PersonVO`以及`CountryVO`聚合成`CompositeDTO`。
 
-*CompositeDTO*
-
+*CompositeDTO.java*
 ```java
 // omit import
 @Data
@@ -245,8 +386,7 @@ public class CompositeDTO {
 }
 ```
 
-*CompositeMapper*
-
+*CompositeMapper.java*
 ```java
 // omit import
 @Mapper
@@ -262,10 +402,9 @@ public interface CompositeMapper {
 }
 ```
 
-使用方式與前述範例相同。
+使用方式與前述範例相同:
 
-*CompositeMapperTest*
-
+*CompositeMapperTest.java*
 ```java
 class CompositeMapperTest {
 
