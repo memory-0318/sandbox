@@ -183,5 +183,7 @@
         <module>0002_MockitoDemo</module>
         <module>0003_MapStructDemo</module>
         <module>0004_Proj4jDemo</module>
+        <module>0005_AssertjDemo</module>
+        <module>1001_CommandPatternDemo</module>
     </modules>
 </project>
