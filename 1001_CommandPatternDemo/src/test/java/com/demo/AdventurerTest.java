@@ -1,5 +1,7 @@
 package com.demo;
 
+import com.demo.complete.Adventurer;
+import com.demo.complete.Position;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.TestInstance;
