@@ -186,5 +186,6 @@
         <module>0005_AssertjDemo</module>
         <module>1001_CommandPatternDemo</module>
         <module>1002_StrategyPatternDemo</module>
+        <module>0006_DockerfileDemo</module>
     </modules>
 </project>
