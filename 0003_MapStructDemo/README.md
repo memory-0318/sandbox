@@ -18,7 +18,7 @@ MapStruct可以處理上述提到的問題，簡化物件間轉換欄位映射 (
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <mapstruct.version>1.4.2.Final</mapstruct.version>
-        <lombok.version>1.18.12</lombok.version>
+        <lombok.version>1.18.20</lombok.version>
     </properties>
 
     <dependencies>
@@ -51,15 +51,15 @@ MapStruct可以處理上述提到的問題，簡化物件間轉換欄位映射 (
                     <target>${maven.compiler.target}</target>
                     <annotationProcessorPaths>
                         <path>
-                            <groupId>org.mapstruct</groupId>
-                            <artifactId>mapstruct-processor</artifactId>
-                            <version>${mapstruct.version}</version>
-                        </path>
-                        <!-- other annotation processors -->
-                        <path>
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>
                             <version>${lombok.version}</version>
+                        </path>
+
+                        <path>
+                            <groupId>org.mapstruct</groupId>
+                            <artifactId>mapstruct-processor</artifactId>
+                            <version>${mapstruct.version}</version>
                         </path>
                     </annotationProcessorPaths>
                 </configuration>
@@ -74,10 +74,11 @@ MapStruct可以處理上述提到的問題，簡化物件間轉換欄位映射 (
 這邊以DTO與VO物件互相轉換為例，準備DTO以及VO:
 
 *PersonDTO.java*
+
 ```java
 // omit import
-@Data
-@Setter(value = AccessLevel.NONE)
+@Value
+@AllArgsConstructor
 @Builder(setterPrefix = "set", toBuilder = true)
 public class PersonDTO {
     private String firstName;
@@ -88,10 +89,11 @@ public class PersonDTO {
 ```
 
 *PersonVO.java*
+
 ```java
 // omit import
-@Data
-@Setter(value = AccessLevel.NONE)
+@Value
+@AllArgsConstructor
 @Builder(setterPrefix = "set", toBuilder = true)
 public class PersonVO {
     private String firstName;
@@ -163,10 +165,11 @@ class PersonMapperTest {
 這邊說明物件欄位轉換時，如何使用`@Mapping`指定兩物件間的欄位對應。
 
 *CountryDTO.java*
+
 ```java
 // omit import
-@Data
-@Setter(value = AccessLevel.NONE)
+@Value
+@AllArgsConstructor
 @Builder(setterPrefix = "set", toBuilder = true)
 public class CountryDTO {
     private String countryName;
@@ -177,10 +180,11 @@ public class CountryDTO {
 ```
 
 *CountryVO.java*
+
 ```java
 // omit import
-@Data
-@Setter(value = AccessLevel.NONE)
+@Value
+@AllArgsConstructor
 @Builder(setterPrefix = "set", toBuilder = true)
 public class CountryVO {
     private String name;
@@ -371,10 +375,11 @@ class CountryMapperTest {
 MapStruct可以將多個來源物件聚合成一個物件，這邊範例將`PersonVO`以及`CountryVO`聚合成`CompositeDTO`。
 
 *CompositeDTO.java*
+
 ```java
 // omit import
-@Data
-@Setter(value = AccessLevel.NONE)
+@Value
+@AllArgsConstructor
 @Builder(setterPrefix = "set", toBuilder = true)
 public class CompositeDTO {
     private String firstName;
