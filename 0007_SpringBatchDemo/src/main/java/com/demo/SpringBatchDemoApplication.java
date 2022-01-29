@@ -12,7 +12,7 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 @SpringBootApplication
 public class SpringBatchDemoApplication extends SpringBootServletInitializer {
     public static void main(String[] args) {
-        SpringApplication application = new SpringApplication(SpringBootApplication.class);
+        SpringApplication application = new SpringApplication(SpringBatchDemoApplication.class);
         application.run();
     }
 }
