@@ -187,5 +187,6 @@
         <module>1001_CommandPatternDemo</module>
         <module>1002_StrategyPatternDemo</module>
         <module>0006_DockerfileDemo</module>
+        <module>0007_SpringBatchDemo</module>
     </modules>
 </project>
